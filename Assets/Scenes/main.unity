@@ -335,6 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 4
   MaxMovement: 2
+  isMovementDisabled: 0
 --- !u!1 &145229248
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,6 +748,7 @@ MonoBehaviour:
   inputNameField: {fileID: 463854973}
   ScoreText: {fileID: 188020406}
   highScore: {fileID: 1818990415}
+  paddle: {fileID: 97436047}
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
