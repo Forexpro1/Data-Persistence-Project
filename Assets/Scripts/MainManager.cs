@@ -10,8 +10,14 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
+    public GameObject GameOverTitle;
+    public GameObject inputNameField;
     public Text ScoreText;
-    public GameObject GameOverText;
+    public HighScore highScore;
+    private int tempInt;
+    public Paddle paddle;
+    
+    
     
     private bool m_Started = false;
     private int m_Points;
@@ -22,6 +28,17 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+        GameData.LoadGameData();
+        // if the game is played for first time, it will create a default list
+        if (GameData.highScoreEntryList == null)
+        {
+            highScore.CreateDefaultList();
+        }
+        
+        highScore.SortList();
+        highScore.LoadHighScores();
+        
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -57,6 +74,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
@@ -71,6 +89,34 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
-        GameOverText.SetActive(true);
+        paddle.isMovementDisabled = true;
+        GameOverTitle.SetActive(true);
+        
+        if (m_Points > GameData.highScoreEntryList[GameData.highScoreEntryList.Count-1].score )
+        {
+            
+            inputNameField.SetActive(true);
+            
+        }
     }
+    // used on the inputfield button when you push enter after name entry
+    public void CollectInputFieldName()
+    {
+        InputField inputName = inputNameField.GetComponentInChildren<InputField>();
+        inputNameField.SetActive(false);
+
+        GameData.highScoreEntryList.RemoveAt(GameData.highScoreEntryList.Count-1);
+
+        HighScoreEntry temp = new HighScoreEntry(inputName.text,m_Points);
+        GameData.highScoreEntryList.Add(temp);
+
+        highScore.SortList();
+
+        highScore.LoadHighScores();
+
+        GameData.SaveGameData();
+        GameOverTitle.SetActive(false);
+        
+    }
+    
 }
